@@ -1,20 +1,31 @@
-"use client";
-
-import { use, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { getProductById } from "@/lib/products";
+import { getProductById, getProducts } from "@/lib/products";
 import { getCategoryBySlug } from "@/lib/categories";
-import { useCart } from "@/components/CartContext";
-import { Product, GENDER_LABELS } from "@/lib/types";
+import { GENDER_LABELS } from "@/lib/types";
 import { notFound } from "next/navigation";
+import ProductActions from "@/components/ProductActions";
 
-export default function ProductDetail({
+export function generateStaticParams() {
+  return getProducts().map((p) => ({ id: p.id }));
+}
+
+export async function generateMetadata({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = use(params);
+  const { id } = await params;
+  const product = getProductById(id);
+  return { title: product?.name ?? "Ürün" };
+}
+
+export default async function ProductDetail({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
   const product = getProductById(id);
   if (!product) return notFound();
 
@@ -73,66 +84,9 @@ export default function ProductDetail({
           <div className="mt-6 text-2xl font-bold text-[#ff6b6b]">
             {product.price} ₺
           </div>
-          <AddToCart product={product} />
+          <ProductActions product={product} />
         </div>
       </div>
-    </div>
-  );
-}
-
-function AddToCart({ product }: { product: Product }) {
-  const { add } = useCart();
-  const hasSizes = product.sizes && product.sizes.length > 0;
-  const [size, setSize] = useState<string>("");
-  const [added, setAdded] = useState(false);
-
-  const disabled = product.stock <= 0 || (hasSizes && !size);
-
-  function handleAdd() {
-    add(product, 1, hasSizes ? size : undefined);
-    setAdded(true);
-    setTimeout(() => setAdded(false), 1500);
-  }
-
-  return (
-    <div className="mt-8">
-      {hasSizes && (
-        <div className="mb-4">
-          <div className="text-sm font-medium text-gray-700 mb-2">
-            Beden / Yaş seçin
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {product.sizes.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => setSize(s)}
-                className={`px-4 py-2 rounded-full border text-sm transition ${
-                  size === s
-                    ? "bg-[#1f3a5f] text-white border-[#1f3a5f]"
-                    : "border-gray-300 hover:border-[#2cc5d2]"
-                }`}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-      <button
-        onClick={handleAdd}
-        disabled={disabled}
-        className="bg-[#ff6b6b] text-white px-6 py-3 rounded-full font-medium hover:bg-[#ec5454] transition disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {product.stock <= 0
-          ? "Stokta Yok"
-          : added
-            ? "Sepete Eklendi ✓"
-            : "Sepete Ekle"}
-      </button>
-      {hasSizes && !size && product.stock > 0 && (
-        <p className="mt-2 text-sm text-gray-400">Lütfen bir beden seçin.</p>
-      )}
     </div>
   );
 }
