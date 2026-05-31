@@ -34,8 +34,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
-  // Load persisted cart on mount.
+  // Load persisted cart on mount. localStorage isn't available during SSR, so
+  // hydration has to happen in an effect after the first client render.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setItems(loadCart());
     setHydrated(true);
   }, []);
