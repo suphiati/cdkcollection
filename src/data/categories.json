@@ -1,0 +1,32 @@
+[
+  {
+    "slug": "bebek-body-tulum",
+    "name": "Bebek Body & Tulum",
+    "description": "0-24 ay yenidoğan body ve tulum modelleri"
+  },
+  {
+    "slug": "tisort-sweat",
+    "name": "Tişört & Sweatshirt",
+    "description": "Günlük rahat tişört ve sweatshirt modelleri"
+  },
+  {
+    "slug": "elbise-etek",
+    "name": "Elbise & Etek",
+    "description": "Kız çocuk elbise ve etek modelleri"
+  },
+  {
+    "slug": "pantolon-tayt",
+    "name": "Pantolon & Tayt",
+    "description": "Esnek ve rahat pantolon, tayt ve eşofman"
+  },
+  {
+    "slug": "mont-kaban",
+    "name": "Mont & Kaban",
+    "description": "Mevsimlik dış giyim, mont ve kaban modelleri"
+  },
+  {
+    "slug": "pijama-ic-giyim",
+    "name": "Pijama & İç Giyim",
+    "description": "Yumuşak pijama takımları ve iç giyim"
+  }
+]
